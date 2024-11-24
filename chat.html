@@ -4,21 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Room</title>
-
-<!-- Firebase App (always required) -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-
-<!-- Firebase Authentication -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-
-<!-- Firebase Firestore -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 
   <style>
     /* General Styling */
     body {
-      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      font-family: 'Courier New', Courier, monospace;
       margin: 0;
       padding: 0;
       display: flex;
@@ -26,8 +21,8 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background-color: #000; /* Noir black background */
-      color: #fff; /* White text for contrast */
+      background-color: #000;
+      color: #fff;
     }
 
     #auth, #chat {
@@ -39,31 +34,33 @@
     input {
       width: calc(100% - 80px);
       padding: 10px;
-      margin-bottom: 20px; /* Adds space below inputs */
-      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      margin-bottom: 20px;
+      font-family: 'Courier New', Courier, monospace;
       border: 1px solid #555;
       border-radius: 5px;
+      color: #fff;
+      background: #000;
     }
 
     button {
       margin-top: 10px;
       padding: 10px 20px;
-      background: #000; /* Black button */
-      color: #fff; /* White text */
-      border: 2px solid #fff; /* White border */
-      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      background: #000;
+      color: #fff;
+      border: 2px solid #fff;
+      font-family: 'Courier New', Courier, monospace;
       border-radius: 5px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
     button:hover {
-      background: #fff; /* White background on hover */
-      color: #000; /* Black text on hover */
+      background: #fff;
+      color: #000;
     }
 
     #chat {
-      display: none; /* Initially hidden */
+      display: none;
     }
 
     #messages {
@@ -74,11 +71,19 @@
       margin-bottom: 10px;
       background: #111;
     }
+
+    /* Version Styling */
+    .version {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
-
-  <!-- Login/Sign-Up Form -->
+  <!-- Authentication Form -->
   <div id="auth">
     <input type="email" id="email" placeholder="Enter your email">
     <input type="password" id="password" placeholder="Enter your password">
@@ -92,12 +97,15 @@
   <div id="chat">
     <h2>Welcome to the Chat Room</h2>
     <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Type your message here">
+    <input type="text" id="messageInput" placeholder="Type your message">
     <button id="send">Send</button>
   </div>
 
+  <!-- Version Display -->
+  <div class="version">v1.0</div>
+
   <script>
-    // Firebase Configuration
+    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBsBa2beD-THUjuypSAvkwm7KdNhR7PRl4",
       authDomain: "connect-78987.firebaseapp.com",
@@ -119,13 +127,8 @@
       const password = document.getElementById('password').value;
 
       auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          alert('Account created successfully! Please log in.');
-        })
-        .catch((error) => {
-          console.error('Sign-Up Error:', error.message);
-          alert(error.message);
-        });
+        .then(() => alert('Account created successfully! Please log in.'))
+        .catch((error) => alert(error.message));
     });
 
     // Handle Log In
@@ -134,24 +137,20 @@
       const password = document.getElementById('password').value;
 
       auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          alert('Logged in successfully!');
-          document.getElementById('auth').style.display = 'none'; // Hide login form
-          document.getElementById('chat').style.display = 'block'; // Show chat room
+        .then(() => {
+          document.getElementById('auth').style.display = 'none';
+          document.getElementById('chat').style.display = 'block';
         })
-        .catch((error) => {
-          console.error('Login Error:', error.message);
-          alert(error.message);
-        });
+        .catch((error) => alert(error.message));
     });
 
-    // Chat Functionality
+    // Real-Time Chat
     const messagesRef = db.collection('messages');
 
-    // Display messages in real time
+    // Display messages in real-time
     messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
       const messagesDiv = document.getElementById('messages');
-      messagesDiv.innerHTML = ''; // Clear old messages
+      messagesDiv.innerHTML = '';
       snapshot.forEach((doc) => {
         const message = doc.data();
         const messageDiv = document.createElement('div');
@@ -163,18 +162,15 @@
     // Send a message
     document.getElementById('send').addEventListener('click', () => {
       const messageInput = document.getElementById('messageInput').value;
-      const user = auth.currentUser.email; // Ensure the user is logged in
+      const user = auth.currentUser.email;
 
       messagesRef.add({
         user: user,
         text: messageInput,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       }).then(() => {
-        document.getElementById('messageInput').value = ''; // Clear input
-      }).catch((error) => {
-        console.error('Message Send Error:', error.message);
-        alert('Error sending message: ' + error.message);
-      });
+        document.getElementById('messageInput').value = '';
+      }).catch((error) => alert(error.message));
     });
   </script>
 </body>
