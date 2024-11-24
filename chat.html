@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Room</title>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBsBa2beD-THUjuypSAvkwm7KdNhR7PRl4",
+      authDomain: "connect-78987.firebaseapp.com",
+      projectId: "connect-78987",
+      storageBucket: "connect-78987.firebasestorage.app",
+      messagingSenderId: "330168551854",
+      appId: "1:330168551854:web:e20e14f89b0334dd5fa03f",
+      measurementId: "G-6RBVQDDWJT"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #000;
+      color: #fff;
+    }
+    #chat {
+      width: 90%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    #messages {
+      height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #555;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #111;
+    }
+    input {
+      width: calc(100% - 80px);
+      padding: 10px;
+      margin-right: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="auth">
+    <h2>Log In</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login">Log In</button>
+  </div>
+  <div id="chat" style="display:none;">
+    <h2>Chat Room</h2>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message">
+    <button id="send">Send</button>
+  </div>
+  <script>
+    // Log In
+    document.getElementById('login').addEventListener('click', () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('Logged in successfully!');
+          document.getElementById('auth').style.display = 'none';
+          document.getElementById('chat').style.display = 'block';
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    });
+
+    // Chat Functionality
+    const messagesRef = db.collection('messages');
+
+    // Display messages in real time
+    messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML = '';
+      snapshot.forEach((doc) => {
+        const message = doc.data();
+        const messageDiv = document.createElement('div');
+        messageDiv.textContent = `${message.user}: ${message.text}`;
+        messagesDiv.appendChild(messageDiv);
+      });
+    });
+
+    // Send a message
+    document.getElementById('send').addEventListener('click', () => {
+      const messageInput = document.getElementById('messageInput').value;
+      const user = auth.currentUser.email;
+
+      messagesRef.add({
+        user: user,
+        text: messageInput,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+      document.getElementById('messageInput').value = '';
+    });
+  </script>
+</body>
+</html>
