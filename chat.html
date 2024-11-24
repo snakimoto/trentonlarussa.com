@@ -30,7 +30,7 @@
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
       margin: 0;
       padding: 0;
       display: flex;
@@ -40,6 +40,9 @@
       height: 100vh;
       background-color: #000;
       color: #fff;
+    }
+    #auth {
+      text-align: center;
     }
     #chat {
       width: 90%;
@@ -58,27 +61,33 @@
       width: calc(100% - 80px);
       padding: 10px;
       margin-right: 10px;
+      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
     }
     button {
       padding: 10px 20px;
-      background: #007BFF;
-      color: #fff;
-      border: none;
+      background: #000; /* Black button */
+      color: #fff; /* White text */
+      border: 2px solid #fff; /* White border */
+      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
     }
     button:hover {
-      background: #0056b3;
+      background: #fff; /* White background on hover */
+      color: #000; /* Black text on hover */
     }
   </style>
 </head>
 <body>
   <div id="auth">
-    <h2>Log In</h2>
+    <h2>Log In or Sign Up</h2>
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Password">
-    <button id="login">Log In</button>
+    <div>
+      <button id="signup">Sign Up</button>
+      <button id="login">Log In</button>
+    </div>
   </div>
   <div id="chat" style="display:none;">
     <h2>Chat Room</h2>
@@ -87,6 +96,21 @@
     <button id="send">Send</button>
   </div>
   <script>
+    // Sign Up
+    document.getElementById('signup').addEventListener('click', () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('Account created successfully! You can now log in.');
+        })
+        .catch((error) => {
+          console.error(error.message);
+          alert(error.message);
+        });
+    });
+
     // Log In
     document.getElementById('login').addEventListener('click', () => {
       const email = document.getElementById('email').value;
@@ -100,6 +124,7 @@
         })
         .catch((error) => {
           console.error(error.message);
+          alert(error.message);
         });
     });
 
@@ -110,27 +135,4 @@
     messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
       const messagesDiv = document.getElementById('messages');
       messagesDiv.innerHTML = '';
-      snapshot.forEach((doc) => {
-        const message = doc.data();
-        const messageDiv = document.createElement('div');
-        messageDiv.textContent = `${message.user}: ${message.text}`;
-        messagesDiv.appendChild(messageDiv);
-      });
-    });
-
-    // Send a message
-    document.getElementById('send').addEventListener('click', () => {
-      const messageInput = document.getElementById('messageInput').value;
-      const user = auth.currentUser.email;
-
-      messagesRef.add({
-        user: user,
-        text: messageInput,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      });
-
-      document.getElementById('messageInput').value = '';
-    });
-  </script>
-</body>
-</html>
+      snapshot.forEach((doc)
