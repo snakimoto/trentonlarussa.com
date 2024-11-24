@@ -4,31 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Room</title>
-  
+
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-  
-  <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBsBa2beD-THUjuypSAvkwm7KdNhR7PRl4",
-      authDomain: "connect-78987.firebaseapp.com",
-      projectId: "connect-78987",
-      storageBucket: "connect-78987.firebasestorage.app",
-      messagingSenderId: "330168551854",
-      appId: "1:330168551854:web:e20e14f89b0334dd5fa03f",
-      measurementId: "G-6RBVQDDWJT"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-  </script>
 
   <style>
+    /* General Styling */
     body {
       font-family: 'Courier New', Courier, monospace; /* Typewriter font */
       margin: 0;
@@ -38,20 +21,27 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background-color: #000;
-      color: #fff;
+      background-color: #000; /* Noir black background */
+      color: #fff; /* White text for contrast */
     }
-    #auth {
+
+    #auth, #chat {
       text-align: center;
+      width: 90%;
+      max-width: 500px;
     }
+
     input {
       width: calc(100% - 80px);
       padding: 10px;
       margin-bottom: 20px; /* Adds space below inputs */
       font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      border: 1px solid #555;
+      border-radius: 5px;
     }
+
     button {
-      margin-top: 10px; /* Adds space between buttons and inputs */
+      margin-top: 10px;
       padding: 10px 20px;
       background: #000; /* Black button */
       color: #fff; /* White text */
@@ -61,15 +51,16 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     button:hover {
       background: #fff; /* White background on hover */
       color: #000; /* Black text on hover */
     }
+
     #chat {
-      width: 90%;
-      max-width: 500px;
-      margin: 0 auto;
+      display: none; /* Initially hidden */
     }
+
     #messages {
       height: 300px;
       overflow-y: scroll;
@@ -81,37 +72,58 @@
   </style>
 </head>
 <body>
+
+  <!-- Login/Sign-Up Form -->
   <div id="auth">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
+    <input type="email" id="email" placeholder="Enter your email">
+    <input type="password" id="password" placeholder="Enter your password">
     <div>
       <button id="signup">Sign Up</button>
       <button id="login">Log In</button>
     </div>
   </div>
-  <div id="chat" style="display:none;">
-    <h2>Chat Room</h2>
+
+  <!-- Chat Room -->
+  <div id="chat">
+    <h2>Welcome to the Chat Room</h2>
     <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Type a message">
+    <input type="text" id="messageInput" placeholder="Type your message here">
     <button id="send">Send</button>
   </div>
+
   <script>
-    // Sign Up
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "your-api-key",
+      authDomain: "your-project-id.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project-id.appspot.com",
+      messagingSenderId: "your-sender-id",
+      appId: "your-app-id",
+      measurementId: "your-measurement-id"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Handle Sign-Up
     document.getElementById('signup').addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          alert('Account created successfully! You can now log in.');
+          alert('Account created successfully! Please log in.');
         })
         .catch((error) => {
-          console.error(error.message);
+          console.error('Sign-Up Error:', error.message);
           alert(error.message);
         });
     });
 
-    // Log In
+    // Handle Log In
     document.getElementById('login').addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -119,11 +131,11 @@
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           alert('Logged in successfully!');
-          document.getElementById('auth').style.display = 'none';
-          document.getElementById('chat').style.display = 'block';
+          document.getElementById('auth').style.display = 'none'; // Hide login form
+          document.getElementById('chat').style.display = 'block'; // Show chat room
         })
         .catch((error) => {
-          console.error(error.message);
+          console.error('Login Error:', error.message);
           alert(error.message);
         });
     });
@@ -134,7 +146,7 @@
     // Display messages in real time
     messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
       const messagesDiv = document.getElementById('messages');
-      messagesDiv.innerHTML = '';
+      messagesDiv.innerHTML = ''; // Clear old messages
       snapshot.forEach((doc) => {
         const message = doc.data();
         const messageDiv = document.createElement('div');
@@ -146,15 +158,18 @@
     // Send a message
     document.getElementById('send').addEventListener('click', () => {
       const messageInput = document.getElementById('messageInput').value;
-      const user = auth.currentUser.email;
+      const user = auth.currentUser.email; // Ensure the user is logged in
 
       messagesRef.add({
         user: user,
         text: messageInput,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      }).then(() => {
+        document.getElementById('messageInput').value = ''; // Clear input
+      }).catch((error) => {
+        console.error('Message Send Error:', error.message);
+        alert('Error sending message: ' + error.message);
       });
-
-      document.getElementById('messageInput').value = '';
     });
   </script>
 </body>
