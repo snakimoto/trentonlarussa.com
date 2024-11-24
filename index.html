@@ -49,5 +49,18 @@
     Connect with me to learn more about my journey and expertise.
   </p>
   <a href="https://www.linkedin.com/in/trent-larussa-48b610337/" target="_blank">Connect on LinkedIn</a>
+  <script>
+  const greeting = document.createElement('p');
+  const hour = new Date().getHours();
+  if (hour < 12) {
+    greeting.innerText = 'Good Morning!';
+  } else if (hour < 18) {
+    greeting.innerText = 'Good Afternoon!';
+  } else {
+    greeting.innerText = 'Good Evening!';
+  }
+  document.body.appendChild(greeting);
+</script>
+
 </body>
 </html>
