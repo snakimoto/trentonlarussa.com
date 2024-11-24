@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trenton LaRussa</title>
   <style>
+    /* General Body Styles */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
       margin: 0;
       padding: 0;
       display: flex;
@@ -14,53 +15,96 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: linear-gradient(135deg, #87CEEB, #FFF);
-      color: #333;
+      background-color: #000; /* Noir black background */
+      color: #fff; /* White text for contrast */
     }
+
+    /* Header Styles (Name on Top Left) */
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 10px 20px;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+      border-bottom: 2px solid #fff; /* Adds a noir vibe */
+      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+    }
+
+    /* Main Content Styles */
     h1 {
       font-size: 3em;
-      color: #222;
-      text-shadow: 2px 2px 4px #aaa;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3); /* Subtle text glow */
     }
+
     p {
       font-size: 1.2em;
       max-width: 600px;
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.6;
+      color: #ddd; /* Slightly dimmed white for softer contrast */
     }
+
+    /* Button/Link Styles */
     a {
       margin-top: 20px;
       padding: 10px 20px;
-      background: #007BFF;
+      background: transparent;
       color: #fff;
+      border: 2px solid #fff;
       text-decoration: none;
       border-radius: 5px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      transition: all 0.3s ease-in-out;
     }
+
     a:hover {
-      background: #0056b3;
+      background: #fff;
+      color: #000;
+    }
+
+    /* Footer Greeting Styles */
+    footer {
+      position: absolute;
+      bottom: 10px;
+      text-align: center;
+      font-size: 1em;
+      color: #aaa; /* Dimmed white */
     }
   </style>
 </head>
 <body>
-  <h1>Trenton LaRussa</h1>
-  <p>
-    Welcome! I am Trenton LaRussa, a professional with a passion for making a greater impact in the world.
-    Connect with me to learn more about my journey and expertise.
-  </p>
-  <a href="https://www.linkedin.com/in/trent-larussa-48b610337/" target="_blank">Connect on LinkedIn</a>
-  <script>
-  const greeting = document.createElement('p');
-  const hour = new Date().getHours();
-  if (hour < 12) {
-    greeting.innerText = 'Good Morning!';
-  } else if (hour < 18) {
-    greeting.innerText = 'Good Afternoon!';
-  } else {
-    greeting.innerText = 'Good Evening!';
-  }
-  document.body.appendChild(greeting);
-</script>
+  <!-- Header -->
+  <header>Trenton LaRussa</header>
 
+  <!-- Main Content -->
+  <main>
+    <h1>Welcome to Noir</h1>
+    <p>
+      I am Trenton LaRussa, a professional with a passion for making a greater impact in the world.
+      Connect with me to learn more about my journey and expertise.
+    </p>
+    <a href="https://www.linkedin.com/in/trent-larussa-48b610337/" target="_blank">Connect on LinkedIn</a>
+  </main>
+
+  <!-- Dynamic Greeting -->
+  <footer id="greeting"></footer>
+
+  <script>
+    // Script for Dynamic Greeting
+    const footer = document.getElementById('greeting');
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      footer.innerText = 'Good Morning!';
+    } else if (hour < 18) {
+      footer.innerText = 'Good Afternoon!';
+    } else {
+      footer.innerText = 'Good Evening!';
+    }
+  </script>
 </body>
 </html>
