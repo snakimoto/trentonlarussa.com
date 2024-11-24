@@ -4,12 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Room</title>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-
   <style>
     body {
       font-family: 'Courier New', Courier, monospace;
@@ -101,7 +95,13 @@
   <!-- Version -->
   <div class="version">v1.0</div>
 
-  <script>
+  <!-- Firebase Setup -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
     // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBsBa2beD-THUjuypSAvkwm7KdNhR7PRl4",
@@ -114,40 +114,63 @@
     };
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    console.log(firebase.apps.length ? "Firebase Initialized" : "Firebase Not Initialized");
+    console.log("Firebase initialized successfully!");
 
-    // Handle Sign-Up
-    document.getElementById('signup').addEventListener('click', () => {
+    // Elements
+    const authDiv = document.getElementById('auth');
+    const chatDiv = document.getElementById('chat');
+    const messagesDiv = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+
+    // Sign-Up Handler
+    document.getElementById('signup').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => alert('Account created successfully! Please log in.'))
-        .catch((error) => alert(error.message));
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert('Account created successfully! Please log in.');
+      } catch (error) {
+        alert(error.message);
+      }
     });
 
-    // Handle Log In
-    document.getElementById('login').addEventListener('click', () => {
+    // Log-In Handler
+    document.getElementById('login').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          document.getElementById('auth').style.display = 'none';
-          document.getElementById('chat').style.display = 'block';
-        })
-        .catch((error) => alert(error.message));
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        authDiv.style.display = 'none';
+        chatDiv.style.display = 'block';
+      } catch (error) {
+        alert(error.message);
+      }
     });
 
-    // Real-Time Chat
-    const messagesRef = db.collection('messages');
+    // Real-Time Listener for Authentication
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authDiv.style.display = 'none';
+        chatDiv.style.display = 'block';
+        console.log("User logged in:", user.email);
+      } else {
+        authDiv.style.display = 'block';
+        chatDiv.style.display = 'none';
+        console.log("User logged out");
+      }
+    });
 
-    messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
-      const messagesDiv = document.getElementById('messages');
+    // Real-Time Chat Listener
+    const messagesRef = collection(db, 'messages');
+    const q = query(messagesRef, orderBy('timestamp'));
+
+    onSnapshot(q, (snapshot) => {
       messagesDiv.innerHTML = '';
       snapshot.forEach((doc) => {
         const message = doc.data();
@@ -157,17 +180,20 @@
       });
     });
 
-    document.getElementById('send').addEventListener('click', () => {
-      const messageInput = document.getElementById('messageInput').value;
-      const user = auth.currentUser.email;
+    // Send Message Handler
+    document.getElementById('send').addEventListener('click', async () => {
+      const text = messageInput.value;
 
-      messagesRef.add({
-        user: user,
-        text: messageInput,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      }).then(() => {
-        document.getElementById('messageInput').value = '';
-      }).catch((error) => alert(error.message));
+      try {
+        await addDoc(messagesRef, {
+          user: auth.currentUser.email,
+          text: text,
+          timestamp: serverTimestamp(),
+        });
+        messageInput.value = '';
+      } catch (error) {
+        alert(error.message);
+      }
     });
   </script>
 </body>
