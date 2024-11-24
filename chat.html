@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Room</title>
-  
+
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 
   <style>
-    /* General Styling */
     body {
       font-family: 'Courier New', Courier, monospace;
       margin: 0;
@@ -35,7 +34,6 @@
       width: calc(100% - 80px);
       padding: 10px;
       margin-bottom: 20px;
-      font-family: 'Courier New', Courier, monospace;
       border: 1px solid #555;
       border-radius: 5px;
       color: #fff;
@@ -48,15 +46,8 @@
       background: #000;
       color: #fff;
       border: 2px solid #fff;
-      font-family: 'Courier New', Courier, monospace;
       border-radius: 5px;
       cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      background: #fff;
-      color: #000;
     }
 
     #chat {
@@ -70,15 +61,6 @@
       padding: 10px;
       margin-bottom: 10px;
       background: #111;
-    }
-
-    /* Version Styling */
-    .version {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 0.9em;
-      color: #aaa;
     }
   </style>
 </head>
@@ -101,11 +83,8 @@
     <button id="send">Send</button>
   </div>
 
-  <!-- Version Display -->
-  <div class="version">v1.0</div>
-
   <script>
-    // Your web app's Firebase configuration
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBsBa2beD-THUjuypSAvkwm7KdNhR7PRl4",
       authDomain: "connect-78987.firebaseapp.com",
@@ -120,6 +99,8 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+
+    console.log(firebase.apps.length ? "Firebase Initialized" : "Firebase Not Initialized");
 
     // Handle Sign-Up
     document.getElementById('signup').addEventListener('click', () => {
@@ -147,7 +128,6 @@
     // Real-Time Chat
     const messagesRef = db.collection('messages');
 
-    // Display messages in real-time
     messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
       const messagesDiv = document.getElementById('messages');
       messagesDiv.innerHTML = '';
@@ -159,7 +139,6 @@
       });
     });
 
-    // Send a message
     document.getElementById('send').addEventListener('click', () => {
       const messageInput = document.getElementById('messageInput').value;
       const user = auth.currentUser.email;
