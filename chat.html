@@ -25,7 +25,7 @@
     }
 
     input {
-      width: calc(100% - 80px);
+      width: 80%;
       padding: 10px;
       margin-bottom: 20px;
       border: 1px solid #555;
@@ -49,6 +49,17 @@
     button:hover {
       background: #fff;
       color: #000;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9em;
+      margin-top: 15px;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     #chat {
@@ -79,62 +90,17 @@
       color: #aaa;
       margin-top: 2px;
     }
-
-    .version {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 0.9em;
-      color: #aaa;
-    }
-
-    .tree {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      color: #0f0;
-      font-family: 'Courier New', Courier, monospace;
-      white-space: pre;
-      font-size: 0.8em;
-    }
-
-    .happy-winter {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.9em;
-      color: #aaa;
-    }
-
-    .refresh-button {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      font-size: 0.9em;
-      color: #fff;
-      background: #222;
-      border: 2px solid #fff;
-      border-radius: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-
-    .refresh-button:hover {
-      background: #fff;
-      color: #000;
-    }
   </style>
 </head>
 <body>
   <!-- Authentication Form -->
   <div id="auth">
-    <input type="email" id="email" placeholder="Enter your email">
-    <input type="password" id="password" placeholder="Enter your password">
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <input type="password" id="password" placeholder="Enter your password" required>
     <div>
-      <button id="signup">Sign Up</button>
       <button id="login">Log In</button>
     </div>
+    <a href="signup.html">Don’t have an account? Sign up here.</a> <!-- Link to the sign-up page -->
   </div>
 
   <!-- Chat Room -->
@@ -146,31 +112,11 @@
     <button id="signOut" style="margin-top: 20px;">Sign Out</button>
   </div>
 
-  <!-- Version -->
-  <div class="version">v1.1</div>
-
-  <!-- Christmas Tree -->
-  <div class="tree">
-    *
-   ***
-  *****
- *******
-*********
-   |||
-  </div>
-
-  <!-- Happy Winter -->
-  <div class="happy-winter">Happy Winter!</div>
-
-  <!-- Refresh Button -->
-  <button class="refresh-button" id="refresh">Refresh</button>
-
   <!-- Firebase Setup -->
   <script type="module">
-    // Firebase Setup
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     // Firebase configuration
     const firebaseConfig = {
@@ -190,20 +136,18 @@
 
     console.log("Firebase initialized successfully!");
 
-    // Elements
     const authDiv = document.getElementById('auth');
     const chatDiv = document.getElementById('chat');
     const messagesDiv = document.getElementById('messages');
     const messageInput = document.getElementById('messageInput');
-    const refreshButton = document.getElementById('refresh');
 
     // Messages reference
     const messagesRef = collection(db, 'messages');
 
-    // Fetch messages every 5 seconds
+    // Fetch messages and display the newest first
     const fetchMessages = async () => {
       try {
-        const q = query(messagesRef, orderBy('timestamp'));
+        const q = query(messagesRef, orderBy('timestamp', 'desc')); // Newest messages first
         const querySnapshot = await getDocs(q);
         messagesDiv.innerHTML = ''; // Clear existing messages
 
@@ -220,30 +164,13 @@
       }
     };
 
-    // Call fetchMessages immediately and set a refresh interval
+    // Fetch messages when the page loads
     fetchMessages();
-    setInterval(fetchMessages, 5000);
-
-    // Refresh Button Handler
-    refreshButton.addEventListener('click', fetchMessages);
-
-    // Sign-Up Handler
-    document.getElementById('signup').addEventListener('click', async () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert('Account created successfully! Please log in.');
-      } catch (error) {
-        alert(error.message);
-      }
-    });
 
     // Log-In Handler
     document.getElementById('login').addEventListener('click', async () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
@@ -260,11 +187,10 @@
       if (user) {
         authDiv.style.display = 'none';
         chatDiv.style.display = 'block';
-        console.log("User logged in:", user.email);
+        fetchMessages(); // Refresh messages on user login
       } else {
         authDiv.style.display = 'block';
         chatDiv.style.display = 'none';
-        console.log("User logged out");
       }
     });
 
@@ -278,12 +204,25 @@
       }
 
       try {
+        // Fetch the username of the current user
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, where('uid', '==', auth.currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          throw new Error('Username not found for current user.');
+        }
+
+        const username = querySnapshot.docs[0].data().username;
+
+        // Add message to Firestore
         await addDoc(messagesRef, {
-          user: auth.currentUser.email,
+          user: username,
           text: text.trim(),
           timestamp: serverTimestamp(),
         });
         messageInput.value = ''; // Clear the input field
+        fetchMessages(); // Refresh messages
       } catch (error) {
         alert('Failed to send message: ' + error.message);
       }
