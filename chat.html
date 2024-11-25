@@ -62,6 +62,22 @@
       padding: 10px;
       margin-bottom: 10px;
       background: #111;
+      text-align: left; /* Align messages to the left */
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background: #222;
+      color: #fff;
+    }
+
+    .timestamp {
+      display: block;
+      font-size: 0.8em;
+      color: #aaa;
+      margin-top: 2px;
     }
 
     .version {
@@ -90,6 +106,7 @@
     <div id="messages"></div>
     <input type="text" id="messageInput" placeholder="Type your message">
     <button id="send">Send</button>
+    <button id="signOut" style="margin-top: 20px;">Sign Out</button>
   </div>
 
   <!-- Version -->
@@ -99,7 +116,7 @@
   <script type="module">
     // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     // Firebase configuration
@@ -146,6 +163,7 @@
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
+        alert('Logged in successfully!');
         authDiv.style.display = 'none';
         chatDiv.style.display = 'block';
       } catch (error) {
@@ -171,11 +189,13 @@
     const q = query(messagesRef, orderBy('timestamp'));
 
     onSnapshot(q, (snapshot) => {
-      messagesDiv.innerHTML = '';
+      messagesDiv.innerHTML = ''; // Clear existing messages
       snapshot.forEach((doc) => {
         const message = doc.data();
         const messageDiv = document.createElement('div');
-        messageDiv.textContent = `${message.user}: ${message.text}`;
+        messageDiv.className = 'message';
+        const time = new Date(message.timestamp?.seconds * 1000).toLocaleTimeString(); // Format timestamp
+        messageDiv.innerHTML = `<strong>${message.user}:</strong> ${message.text}<span class="timestamp">${time}</span>`;
         messagesDiv.appendChild(messageDiv);
       });
     });
@@ -184,15 +204,32 @@
     document.getElementById('send').addEventListener('click', async () => {
       const text = messageInput.value;
 
+      if (text.trim() === '') {
+        alert('Message cannot be empty!');
+        return;
+      }
+
       try {
         await addDoc(messagesRef, {
           user: auth.currentUser.email,
-          text: text,
+          text: text.trim(),
           timestamp: serverTimestamp(),
         });
-        messageInput.value = '';
+        messageInput.value = ''; // Clear the input field
       } catch (error) {
-        alert(error.message);
+        alert('Failed to send message: ' + error.message);
+      }
+    });
+
+    // Sign-Out Functionality
+    document.getElementById('signOut').addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        alert('You have been signed out.');
+        authDiv.style.display = 'block';
+        chatDiv.style.display = 'none';
+      } catch (error) {
+        alert('Error signing out: ' + error.message);
       }
     });
   </script>
