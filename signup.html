@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #000;
+      color: #fff;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #555;
+      border-radius: 5px;
+      color: #fff;
+      background: #000;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #000;
+      color: #fff;
+      border: 2px solid #fff;
+      font-family: 'Courier New', Courier, monospace;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sign Up</h1>
+  <div>
+    <input type="text" id="username" placeholder="Enter a unique username" required>
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <input type="password" id="password" placeholder="Enter your password" required>
+    <button id="signup">Sign Up</button>
+    <div class="error" id="error"></div>
+  </div>
+
+  <!-- Firebase Setup -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBsBa2beD-THUjuypSAvkwm7KdNhR7PRl4",
+      authDomain: "connect-78987.firebaseapp.com",
+      projectId: "connect-78987",
+      storageBucket: "connect-78987.firebasestorage.app",
+      messagingSenderId: "330168551854",
+      appId: "1:330168551854:web:e20e14f89b0334dd5fa03f",
+      measurementId: "G-6RBVQDDWJT"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const signupButton = document.getElementById('signup');
+    const errorDiv = document.getElementById('error');
+
+    signupButton.addEventListener('click', async () => {
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!username || !email || !password) {
+        errorDiv.textContent = 'All fields are required.';
+        return;
+      }
+
+      try {
+        // Check if username already exists
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, where('username', '==', username));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          errorDiv.textContent = 'Username already exists. Please choose another.';
+          return;
+        }
+
+        // Create user account
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
+
+        // Save username to Firestore
+        await addDoc(usersRef, {
+          uid: uid,
+          username: username,
+          email: email,
+        });
+
+        alert('Account created successfully!');
+        window.location.href = "chat.html"; // Redirect to chat page
+      } catch (error) {
+        errorDiv.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
