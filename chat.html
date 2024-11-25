@@ -87,6 +87,43 @@
       font-size: 0.9em;
       color: #aaa;
     }
+
+    .tree {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre;
+      font-size: 0.8em;
+    }
+
+    .happy-winter {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9em;
+      color: #aaa;
+    }
+
+    .refresh-button {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.9em;
+      color: #fff;
+      background: #222;
+      border: 2px solid #fff;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .refresh-button:hover {
+      background: #fff;
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -110,7 +147,23 @@
   </div>
 
   <!-- Version -->
-  <div class="version">v1.0</div>
+  <div class="version">v1.1</div>
+
+  <!-- Christmas Tree -->
+  <div class="tree">
+    *
+   ***
+  *****
+ *******
+*********
+   |||
+  </div>
+
+  <!-- Happy Winter -->
+  <div class="happy-winter">Happy Winter!</div>
+
+  <!-- Refresh Button -->
+  <button class="refresh-button" id="refresh">Refresh</button>
 
   <!-- Firebase Setup -->
   <script type="module">
@@ -142,6 +195,7 @@
     const chatDiv = document.getElementById('chat');
     const messagesDiv = document.getElementById('messages');
     const messageInput = document.getElementById('messageInput');
+    const refreshButton = document.getElementById('refresh');
 
     // Messages reference
     const messagesRef = collection(db, 'messages');
@@ -169,6 +223,9 @@
     // Call fetchMessages immediately and set a refresh interval
     fetchMessages();
     setInterval(fetchMessages, 5000);
+
+    // Refresh Button Handler
+    refreshButton.addEventListener('click', fetchMessages);
 
     // Sign-Up Handler
     document.getElementById('signup').addEventListener('click', async () => {
