@@ -114,10 +114,10 @@
 
   <!-- Firebase Setup -->
   <script type="module">
-    // Import Firebase modules
+    // Firebase Setup
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, orderBy, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     // Firebase configuration
     const firebaseConfig = {
@@ -142,6 +142,33 @@
     const chatDiv = document.getElementById('chat');
     const messagesDiv = document.getElementById('messages');
     const messageInput = document.getElementById('messageInput');
+
+    // Messages reference
+    const messagesRef = collection(db, 'messages');
+
+    // Fetch messages every 5 seconds
+    const fetchMessages = async () => {
+      try {
+        const q = query(messagesRef, orderBy('timestamp'));
+        const querySnapshot = await getDocs(q);
+        messagesDiv.innerHTML = ''; // Clear existing messages
+
+        querySnapshot.forEach((doc) => {
+          const message = doc.data();
+          const messageDiv = document.createElement('div');
+          messageDiv.className = 'message';
+          const time = new Date(message.timestamp?.seconds * 1000).toLocaleTimeString(); // Format timestamp
+          messageDiv.innerHTML = `<strong>${message.user}:</strong> ${message.text}<span class="timestamp">${time}</span>`;
+          messagesDiv.appendChild(messageDiv);
+        });
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    // Call fetchMessages immediately and set a refresh interval
+    fetchMessages();
+    setInterval(fetchMessages, 5000);
 
     // Sign-Up Handler
     document.getElementById('signup').addEventListener('click', async () => {
@@ -182,22 +209,6 @@
         chatDiv.style.display = 'none';
         console.log("User logged out");
       }
-    });
-
-    // Real-Time Chat Listener
-    const messagesRef = collection(db, 'messages');
-    const q = query(messagesRef, orderBy('timestamp'));
-
-    onSnapshot(q, (snapshot) => {
-      messagesDiv.innerHTML = ''; // Clear existing messages
-      snapshot.forEach((doc) => {
-        const message = doc.data();
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message';
-        const time = new Date(message.timestamp?.seconds * 1000).toLocaleTimeString(); // Format timestamp
-        messageDiv.innerHTML = `<strong>${message.user}:</strong> ${message.text}<span class="timestamp">${time}</span>`;
-        messagesDiv.appendChild(messageDiv);
-      });
     });
 
     // Send Message Handler
