@@ -8,49 +8,46 @@
 </head>
 <body>
 
-  <header>
-    <h1>Le Roulette Casino</h1>
-    <div id="result-box">Waiting for spin...</div>
-  </header>
+<header>
+  <h1>Le Roulette Casino</h1>
+  <div id="result-box">Waiting for spin...</div>
+</header>
 
-  <main class="main-layout">
+<main class="main-layout">
 
-    <section class="wheel-section">
-      <div class="wheel-container">
-        <div class="wheel" id="wheel"></div>
-        <div class="ball" id="ball"></div>
+  <section class="wheel-section">
+    <div class="wheel-container">
+      <div class="wheel" id="wheel"></div>
+      <div class="ball" id="ball"></div>
+    </div>
+  </section>
+
+  <section class="controls-section">
+    <div class="controls">
+      <div class="chip-selector">
+        <p>Select Chip:</p>
+        <button onclick="selectChip(5)">$5</button>
+        <button onclick="selectChip(10)">$10</button>
+        <button onclick="selectChip(25)">$25</button>
+        <button onclick="selectChip(50)">$50</button>
+        <button onclick="selectChip(100)">$100</button>
       </div>
-    </section>
-
-    <section class="controls-section">
-      <div class="controls">
-        <div class="chip-selector">
-          <p>Select Chip:</p>
-          <button onclick="selectChip(5)">$5</button>
-          <button onclick="selectChip(10)">$10</button>
-          <button onclick="selectChip(25)">$25</button>
-          <button onclick="selectChip(50)">$50</button>
-          <button onclick="selectChip(100)">$100</button>
-        </div>
-
-        <button class="spin-button" onclick="spinWheel()">Spin</button>
-        <button class="reload-button" onclick="reloadBalance()">Reload Balance</button>
-
-        <div class="balance-display">Balance: $<span id="balance">1000</span></div>
-
-        <div class="previous-rolls">
-          <h3>Previous Rolls</h3>
-          <div id="previous-rolls-list"></div>
-        </div>
+      <button class="spin-button" onclick="spinWheel()">Spin</button>
+      <button class="reload-button" onclick="reloadBalance()">Reload Balance</button>
+      <div class="balance-display">Balance: $<span id="balance">1000</span></div>
+      <div class="previous-rolls">
+        <h3>Previous Rolls</h3>
+        <div id="previous-rolls-list"></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+</main>
 
-  <footer>
-    <div class="betting-table" id="betting-table"></div>
-  </footer>
+<footer>
+  <div class="betting-table" id="betting-table"></div>
+</footer>
 
-  <script src="roulette.js"></script>
+<script src="roulette.js"></script>
 </body>
 </html>
