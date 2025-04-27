@@ -30,7 +30,29 @@
       color: #fff;
       background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
       border-bottom: 2px solid #fff; /* Adds a noir vibe */
-      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Poker Chip Button Styles */
+    .poker-chip-button {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background-color: #333; /* Dark grey poker chip */
+      border: 3px solid #666; /* Slightly lighter grey ring */
+      border-radius: 50%;
+      display: block;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-image: radial-gradient(circle at center, #555 20%, #333 70%);
+      background-size: cover;
+    }
+
+    .poker-chip-button:hover {
+      background-color: #555;
+      border-color: #999;
     }
 
     /* Main Content Styles */
@@ -53,10 +75,10 @@
     .chat-button {
       margin-top: 20px;
       padding: 10px 20px;
-      background: #000; /* Black button */
-      color: #fff; /* White text */
-      border: 2px solid #fff; /* White border */
-      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      background: #000;
+      color: #fff;
+      border: 2px solid #fff;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 1.2em;
       text-decoration: none;
       border-radius: 5px;
@@ -65,8 +87,8 @@
     }
 
     .chat-button:hover {
-      background: #fff; /* White background on hover */
-      color: #000; /* Black text on hover */
+      background: #fff;
+      color: #000;
     }
 
     /* Footer Greeting Styles */
@@ -80,8 +102,12 @@
   </style>
 </head>
 <body>
+
   <!-- Header -->
   <header>Trenton LaRussa</header>
+
+  <!-- Poker Chip Button -->
+  <a href="roulette.html" class="poker-chip-button" title="Play Roulette!"></a>
 
   <!-- Main Content -->
   <main>
@@ -108,5 +134,6 @@
       footer.innerText = 'Good Evening!';
     }
   </script>
+
 </body>
 </html>
