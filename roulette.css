@@ -26,7 +26,7 @@ h1 {
 .main-layout {
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 40px;
 }
 
@@ -40,9 +40,22 @@ h1 {
 .wheel {
   width: 100%;
   height: 100%;
-  border: 10px solid #fff;
+  border: 8px solid #fff;
   border-radius: 50%;
-  background: radial-gradient(circle at center, #555 30%, #222 70%);
+  background: conic-gradient(
+    red 0deg 30deg,
+    black 30deg 60deg,
+    red 60deg 90deg,
+    black 90deg 120deg,
+    red 120deg 150deg,
+    black 150deg 180deg,
+    red 180deg 210deg,
+    black 210deg 240deg,
+    red 240deg 270deg,
+    black 270deg 300deg,
+    red 300deg 330deg,
+    green 330deg 360deg
+  );
 }
 
 .ball {
@@ -133,8 +146,8 @@ footer {
 
 .betting-table {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   padding: 20px;
 }
