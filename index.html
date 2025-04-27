@@ -19,7 +19,7 @@
       color: #fff;
     }
 
-    /* Header Styles (Name on Top Left) */
+    /* Header Styles */
     header {
       position: absolute;
       top: 0;
@@ -32,28 +32,28 @@
       border-bottom: 2px solid #fff;
     }
 
-    /* Small Black Poker Chip Button */
+    /* Smaller, Spinning, Old-School Poker Chip */
     .poker-chip-button {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      width: 30px;
-      height: 30px;
-      background-color: #111; /* Dark black chip */
-      border: 2px solid #555; /* Darker ring */
+      top: 10px;
+      right: 15px;
+      width: 22px;
+      height: 22px;
+      background-color: #111; /* Dark black */
+      border: 2px solid #666;
       border-radius: 50%;
       display: block;
       cursor: pointer;
-      transition: all 0.4s ease;
-      background-image: radial-gradient(circle at center, #222 20%, #111 70%);
+      background-image: radial-gradient(circle at center, #333 20%, #111 80%);
       background-size: cover;
+      transition: all 0.5s ease;
+      image-rendering: pixelated; /* Makes it feel old-school */
     }
 
-    /* Hover Effect + Tiny Spin */
     .poker-chip-button:hover {
+      transform: rotate(360deg) scale(1.2);
       background-color: #222;
-      border-color: #888;
-      transform: rotate(15deg) scale(1.1);
+      border-color: #999;
     }
 
     /* Main Content Styles */
@@ -72,7 +72,7 @@
       color: #ddd;
     }
 
-    /* Chat Button Styles */
+    /* Chat Button */
     .chat-button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -84,7 +84,7 @@
       text-decoration: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
 
     .chat-button:hover {
@@ -92,7 +92,7 @@
       color: #000;
     }
 
-    /* Footer Greeting Styles */
+    /* Footer Greeting */
     footer {
       position: absolute;
       bottom: 10px;
@@ -102,6 +102,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Header -->
@@ -116,15 +117,14 @@
     <p>
       Hi, I’m Trenton LaRussa. Thanks for stopping by! I’m just a guy trying to figure out life like everyone else, and along the way, I’ve learned how much I love connecting with people and hearing their stories.
     </p>
-    <!-- Chat Room Button -->
     <button class="chat-button" onclick="location.href='chat.html'">Join the Chat Room</button>
   </main>
 
-  <!-- Dynamic Greeting -->
+  <!-- Footer Greeting -->
   <footer id="greeting"></footer>
 
   <script>
-    // Script for Dynamic Greeting
+    // Dynamic Greeting
     const footer = document.getElementById('greeting');
     const hour = new Date().getHours();
     if (hour < 12) {
