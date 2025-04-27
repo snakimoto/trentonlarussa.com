@@ -5,38 +5,32 @@ let bets = {}; // { number: amount }
 let spinning = false;
 let previousRolls = [];
 
-// Numbers and Colors
+// Wheel numbers (European style)
 const numbers = [
-  { num: 0, color: 'green' },
-  { num: 32, color: 'red' }, { num: 15, color: 'black' },
-  { num: 19, color: 'red' }, { num: 4, color: 'black' },
-  { num: 21, color: 'red' }, { num: 2, color: 'black' },
-  { num: 25, color: 'red' }, { num: 17, color: 'black' },
-  { num: 34, color: 'red' }, { num: 6, color: 'black' },
-  { num: 27, color: 'red' }, { num: 13, color: 'black' },
-  { num: 36, color: 'red' }, { num: 11, color: 'black' },
-  { num: 30, color: 'red' }, { num: 8, color: 'black' },
-  { num: 23, color: 'red' }, { num: 10, color: 'black' },
-  { num: 5, color: 'red' }, { num: 24, color: 'black' },
-  { num: 16, color: 'red' }, { num: 33, color: 'black' },
-  { num: 1, color: 'red' }, { num: 20, color: 'black' },
-  { num: 14, color: 'red' }, { num: 31, color: 'black' },
-  { num: 9, color: 'red' }, { num: 22, color: 'black' },
-  { num: 18, color: 'red' }, { num: 29, color: 'black' },
-  { num: 7, color: 'red' }, { num: 28, color: 'black' },
-  { num: 12, color: 'red' }, { num: 35, color: 'black' },
-  { num: 3, color: 'red' }, { num: 26, color: 'black' }
+  0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27,
+  13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1,
+  20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
 ];
 
+const colors = {
+  0: 'green', 32: 'red', 15: 'black', 19: 'red', 4: 'black', 21: 'red',
+  2: 'black', 25: 'red', 17: 'black', 34: 'red', 6: 'black', 27: 'red',
+  13: 'black', 36: 'red', 11: 'black', 30: 'red', 8: 'black', 23: 'red',
+  10: 'black', 5: 'red', 24: 'black', 16: 'red', 33: 'black', 1: 'red',
+  20: 'black', 14: 'red', 31: 'black', 9: 'red', 22: 'black', 18: 'red',
+  29: 'black', 7: 'red', 28: 'black', 12: 'red', 35: 'black', 3: 'red', 26: 'black'
+};
+
+// Generate Betting Table
 const bettingTable = document.getElementById('betting-table');
 
-numbers.forEach((item) => {
+numbers.sort((a,b) => a-b).forEach(num => {
   const div = document.createElement('div');
   div.classList.add('bet-spot');
-  div.classList.add(item.color);
-  div.id = `spot-${item.num}`;
-  div.innerHTML = `<div>${item.num}</div><div class="bet-amount" id="amount-${item.num}"></div>`;
-  div.onclick = () => placeBet(item.num);
+  div.classList.add(colors[num]);
+  div.id = `spot-${num}`;
+  div.innerHTML = `<div>${num}</div><div class="bet-amount" id="amount-${num}"></div>`;
+  div.onclick = () => placeBet(num);
   bettingTable.appendChild(div);
 });
 
@@ -79,7 +73,6 @@ function spinWheel() {
 
   const ball = document.getElementById('ball');
   let position = Math.floor(Math.random() * numbers.length);
-
   let ticks = 0;
   let totalTicks = 50 + Math.floor(Math.random() * 30); // 50-80 ticks
   let speed = 50; // Initial speed
@@ -101,31 +94,28 @@ function spinWheel() {
   }, speed);
 }
 
-function landOn(landed) {
+function landOn(landedNum) {
   const resultBox = document.getElementById('result-box');
 
-  // Highlight landed number orange
   document.querySelectorAll('.bet-spot').forEach(e => e.classList.remove('orange'));
-  document.getElementById(`spot-${landed.num}`).classList.add('orange');
+  document.getElementById(`spot-${landedNum}`).classList.add('orange');
 
-  // Update previous rolls
-  previousRolls.unshift(landed);
+  previousRolls.unshift({num: landedNum, color: colors[landedNum]});
   if (previousRolls.length > 10) previousRolls.pop();
   updatePreviousRolls();
 
-  // Calculate winnings
   let winAmount = 0;
-  if (bets[landed.num]) {
-    winAmount += bets[landed.num] * 35;
+  if (bets[landedNum]) {
+    winAmount += bets[landedNum] * 35;
   }
 
   balance += winAmount;
   updateBalance();
 
   if (winAmount > 0) {
-    resultBox.innerText = `Ball landed on ${landed.num} (${landed.color}). You won $${winAmount}!`;
+    resultBox.innerText = `Ball landed on ${landedNum} (${colors[landedNum]}). You won $${winAmount}!`;
   } else {
-    resultBox.innerText = `Ball landed on ${landed.num} (${landed.color}). You lost.`;
+    resultBox.innerText = `Ball landed on ${landedNum} (${colors[landedNum]}). You lost.`;
   }
 
   bets = {};
