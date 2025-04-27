@@ -1,0 +1,147 @@
+/* Basic page setup */
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+h1 {
+  margin-top: 20px;
+  font-size: 2.5em;
+}
+
+/* Balance Display */
+.balance-container {
+  margin: 20px 0;
+  font-size: 1.5em;
+}
+
+/* Chip Selector */
+.chip-selector {
+  margin-bottom: 20px;
+}
+
+.chip-selector button {
+  margin: 5px;
+  padding: 8px 15px;
+  background: #222;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.chip-selector button:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Roulette container */
+.roulette-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 50px;
+}
+
+/* Wheel container */
+.wheel-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.wheel {
+  width: 100%;
+  height: 100%;
+  border: 10px solid #fff;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #555 30%, #222 70%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.ball {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -10px;
+  margin-left: -10px;
+  z-index: 2;
+  transform-origin: center -130px;
+}
+
+/* Roulette Table */
+.table {
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  gap: 5px;
+}
+
+.bet-spot {
+  width: 60px;
+  height: 60px;
+  background: #333;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.bet-spot.red {
+  background-color: darkred;
+}
+
+.bet-spot.black {
+  background-color: #111;
+}
+
+.bet-spot.green {
+  background-color: green;
+}
+
+.bet-spot.selected {
+  border: 3px solid yellow;
+}
+
+/* Spin Button */
+.spin-button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  background: black;
+  color: white;
+  font-size: 1.5em;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.spin-button:hover {
+  background: white;
+  color: black;
+}
+
+/* Result Message */
+#result {
+  margin-top: 20px;
+  font-size: 1.3em;
+  height: 30px;
+}
