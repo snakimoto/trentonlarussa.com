@@ -7,7 +7,7 @@
   <style>
     /* General Body Styles */
     body {
-      font-family: 'Courier New', Courier, monospace; /* Typewriter font */
+      font-family: 'Courier New', Courier, monospace;
       margin: 0;
       padding: 0;
       display: flex;
@@ -15,8 +15,8 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #000; /* Noir black background */
-      color: #fff; /* White text for contrast */
+      background-color: #000;
+      color: #fff;
     }
 
     /* Header Styles (Name on Top Left) */
@@ -28,31 +28,32 @@
       font-size: 1.5em;
       font-weight: bold;
       color: #fff;
-      background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
-      border-bottom: 2px solid #fff; /* Adds a noir vibe */
-      font-family: 'Courier New', Courier, monospace;
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom: 2px solid #fff;
     }
 
-    /* Poker Chip Button Styles */
+    /* Small Black Poker Chip Button */
     .poker-chip-button {
       position: absolute;
       top: 15px;
       right: 20px;
-      width: 40px;
-      height: 40px;
-      background-color: #333; /* Dark grey poker chip */
-      border: 3px solid #666; /* Slightly lighter grey ring */
+      width: 30px;
+      height: 30px;
+      background-color: #111; /* Dark black chip */
+      border: 2px solid #555; /* Darker ring */
       border-radius: 50%;
       display: block;
       cursor: pointer;
-      transition: all 0.3s ease;
-      background-image: radial-gradient(circle at center, #555 20%, #333 70%);
+      transition: all 0.4s ease;
+      background-image: radial-gradient(circle at center, #222 20%, #111 70%);
       background-size: cover;
     }
 
+    /* Hover Effect + Tiny Spin */
     .poker-chip-button:hover {
-      background-color: #555;
-      border-color: #999;
+      background-color: #222;
+      border-color: #888;
+      transform: rotate(15deg) scale(1.1);
     }
 
     /* Main Content Styles */
@@ -60,7 +61,7 @@
       font-size: 3em;
       margin-bottom: 20px;
       text-transform: uppercase;
-      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3); /* Subtle text glow */
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
     }
 
     p {
@@ -68,10 +69,10 @@
       max-width: 600px;
       text-align: center;
       line-height: 1.6;
-      color: #ddd; /* Slightly dimmed white for softer contrast */
+      color: #ddd;
     }
 
-    /* Button Styles */
+    /* Chat Button Styles */
     .chat-button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -97,7 +98,7 @@
       bottom: 10px;
       text-align: center;
       font-size: 1em;
-      color: #aaa; /* Dimmed white */
+      color: #aaa;
     }
   </style>
 </head>
