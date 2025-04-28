@@ -16,38 +16,65 @@
 <main class="main-layout">
 
   <section class="wheel-section">
-    <div class="wheel-container">
-      <div class="wheel" id="wheel"></div>
-      <div class="ball" id="ball"></div>
-    </div>
+    <div id="wheel"></div>
   </section>
 
   <section class="controls-section">
     <div class="controls">
+
       <div class="chip-selector">
         <p>Select Chip:</p>
-        <button onclick="selectChip(5)">$5</button>
-        <button onclick="selectChip(10)">$10</button>
-        <button onclick="selectChip(25)">$25</button>
-        <button onclick="selectChip(50)">$50</button>
-        <button onclick="selectChip(100)">$100</button>
+        <div id="chips">
+          <button onclick="selectChip(5)" id="chip-5">$5</button>
+          <button onclick="selectChip(10)" id="chip-10">$10</button>
+          <button onclick="selectChip(25)" id="chip-25">$25</button>
+          <button onclick="selectChip(50)" id="chip-50">$50</button>
+          <button onclick="selectChip(100)" id="chip-100">$100</button>
+        </div>
       </div>
-      <button class="spin-button" onclick="spinWheel()">Spin</button>
-      <button class="reload-button" onclick="reloadBalance()">Reload Balance</button>
-      <div class="balance-display">Balance: $<span id="balance">1000</span></div>
+
+      <div class="live-bets">
+        <h3>Live Bets:</h3>
+        <div id="live-bets-list"></div>
+      </div>
+
+      <button id="spin-button" onclick="spinWheel()">Spin</button>
+      <button id="reload-button" onclick="reloadBalance()">Reload Balance</button>
+      <div id="balance-display">Balance: $<span id="balance">1000</span></div>
+
       <div class="previous-rolls">
         <h3>Previous Rolls</h3>
         <div id="previous-rolls-list"></div>
       </div>
+
     </div>
   </section>
 
 </main>
 
 <footer>
-  <div class="betting-table" id="betting-table"></div>
+  <div id="betting-table">
+    <h2>Place Your Bets</h2>
+    <div id="number-bets"></div>
+
+    <div id="special-bets">
+      <div class="special-bet" onclick="placeSpecialBet('red')">Red</div>
+      <div class="special-bet" onclick="placeSpecialBet('black')">Black</div>
+      <div class="special-bet" onclick="placeSpecialBet('green')">Green</div>
+      <div class="special-bet" onclick="placeSpecialBet('1st12')">1st 12 (1-12)</div>
+      <div class="special-bet" onclick="placeSpecialBet('2nd12')">2nd 12 (13-24)</div>
+      <div class="special-bet" onclick="placeSpecialBet('3rd12')">3rd 12 (25-36)</div>
+      <div class="special-bet" onclick="placeSpecialBet('low')">1-18 (Low)</div>
+      <div class="special-bet" onclick="placeSpecialBet('high')">19-36 (High)</div>
+    </div>
+  </div>
 </footer>
 
+<!-- Sound FX -->
+<audio id="spin-sound" src="spin.mp3"></audio>
+<audio id="ding-sound" src="ding.mp3"></audio>
+
 <script src="roulette.js"></script>
+
 </body>
 </html>
