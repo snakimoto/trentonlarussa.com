@@ -7,8 +7,7 @@ const numbers = Array.from({length: 37}, (_, i) => i);
 
 function generateWheel() {
   const wheel = document.getElementById('wheel');
-  const wheelRect = wheel.getBoundingClientRect();
-  const radius = wheel.offsetWidth / 2 - 20; // Subtract a little margin
+  const radius = wheel.offsetWidth / 2 - 40; // Adjust radius smaller so numbers fit better
 
   numbers.forEach((num, i) => {
     const sector = document.createElement('div');
@@ -18,9 +17,10 @@ function generateWheel() {
     const x = radius * Math.cos(angle);
     const y = radius * Math.sin(angle);
 
+    // 50% centers it, +150px moves it 3 inches right, +30px moves it 1 inch down
     sector.style.position = 'absolute';
-    sector.style.left = `calc(50% + ${x}px - 15px)`; // 15 = half sector width
-    sector.style.top = `calc(50% + ${y}px - 15px)`;  // 15 = half sector height
+    sector.style.left = `calc(50% + ${x + 150}px - 15px)`;
+    sector.style.top = `calc(50% + ${y + 30}px - 15px)`;
     sector.innerText = num;
     sector.id = `sector-${num}`;
 
