@@ -40,7 +40,7 @@ h1 {
   border-radius: 50%;
   background: #333;
   overflow: hidden;
-  transform: translate(150px, 30px); /* move entire wheel right and down */
+  transform: translate(50px, 30px); /* move entire wheel right and down */
 }
 
 .wheel-sector {
