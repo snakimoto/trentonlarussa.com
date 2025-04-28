@@ -10,7 +10,7 @@ function generateWheel() {
   numbers.forEach((num, i) => {
     const sector = document.createElement('div');
     sector.className = 'wheel-sector';
-    sector.style.transform = `rotate(${i * (360/37)}deg) translate(120px) rotate(-${i * (360/37)}deg)`;
+    sector.style.transform = `rotate(${i * (360/37)}deg) translate(160px) rotate(-${i * (360/37)}deg)`;
     sector.innerText = num;
     sector.id = `sector-${num}`;
 
@@ -85,9 +85,9 @@ function spinWheel() {
   document.getElementById('spin-sound').play();
 
   let position = 0;
-  let totalTicks = 60 + Math.floor(Math.random() * 20); // more ticks for smoother feel
+  let totalTicks = 70 + Math.floor(Math.random() * 20);
   let ticksLeft = totalTicks;
-  let speed = 30; // faster at first
+  let speed = 30;
 
   const spin = setInterval(() => {
     sectors.forEach(sec => sec.classList.remove('highlight-yellow', 'highlight-orange'));
@@ -107,44 +107,37 @@ function spinWheel() {
       finishSpin(landedNumber);
     }
 
-    if (ticksLeft < totalTicks * 0.5) speed += 1; // slow down gradually
+    if (ticksLeft < totalTicks * 0.5) speed += 1;
   }, speed);
 }
 
 function finishSpin(landedNumber) {
   let winAmount = 0;
 
-  // Number win
-  if (bets[landedNumber]) winAmount += bets[landedNumber] * 35;
-
-  // Color win
   const redNumbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
   const blackNumbers = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35];
-  
+
+  if (bets[landedNumber]) winAmount += bets[landedNumber] * 35;
   if (bets['red'] && redNumbers.includes(landedNumber)) winAmount += bets['red'] * 2;
   if (bets['black'] && blackNumbers.includes(landedNumber)) winAmount += bets['black'] * 2;
   if (bets['green'] && landedNumber === 0) winAmount += bets['green'] * 36;
-
-  // Dozens win
   if (bets['1st12'] && landedNumber >=1 && landedNumber <=12) winAmount += bets['1st12'] * 3;
   if (bets['2nd12'] && landedNumber >=13 && landedNumber <=24) winAmount += bets['2nd12'] * 3;
   if (bets['3rd12'] && landedNumber >=25 && landedNumber <=36) winAmount += bets['3rd12'] * 3;
-
-  // High/Low win
   if (bets['low'] && landedNumber >=1 && landedNumber <=18) winAmount += bets['low'] * 2;
   if (bets['high'] && landedNumber >=19 && landedNumber <=36) winAmount += bets['high'] * 2;
 
-  // Update balance and show result
   balance += winAmount;
   updateBalance();
 
   if (winAmount > 0) {
+    document.body.classList.add('win-flash');
+    setTimeout(() => document.body.classList.remove('win-flash'), 500);
     document.getElementById('result-box').innerText = `Ball landed on ${landedNumber}. You won $${winAmount}!`;
   } else {
     document.getElementById('result-box').innerText = `Ball landed on ${landedNumber}. No win this time.`;
   }
 
-  // Reset bets
   bets = {};
   updateLiveBets();
   spinning = false;
