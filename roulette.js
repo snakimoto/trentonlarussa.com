@@ -10,6 +10,7 @@ function generateWheel() {
   numbers.forEach((num, i) => {
     const sector = document.createElement('div');
     sector.className = 'wheel-sector';
+
     sector.style.transform = `rotate(${i * (360/37)}deg) translate(160px) rotate(-${i * (360/37)}deg)`;
     sector.innerText = num;
     sector.id = `sector-${num}`;
