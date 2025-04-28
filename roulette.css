@@ -40,6 +40,7 @@ h1 {
   border-radius: 50%;
   background: #333;
   overflow: hidden;
+  transform: translate(150px, 30px); /* move entire wheel right and down */
 }
 
 .wheel-sector {
@@ -53,6 +54,11 @@ h1 {
   line-height: 30px;
   font-size: 12px;
   border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+}
+
 }
 
 .highlight-yellow {
