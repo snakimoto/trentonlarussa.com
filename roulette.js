@@ -7,7 +7,8 @@ const numbers = Array.from({length: 37}, (_, i) => i);
 
 function generateWheel() {
   const wheel = document.getElementById('wheel');
-  const radius = wheel.offsetWidth / 2 - 40; // Dynamic radius calculation
+  const wheelRect = wheel.getBoundingClientRect();
+  const radius = wheel.offsetWidth / 2 - 20; // Subtract a little margin
 
   numbers.forEach((num, i) => {
     const sector = document.createElement('div');
@@ -18,8 +19,8 @@ function generateWheel() {
     const y = radius * Math.sin(angle);
 
     sector.style.position = 'absolute';
-    sector.style.left = `${200 + x - 15}px`;  // Centered (200=half wheel), then offset half of sector size
-    sector.style.top = `${200 + y - 15}px`;
+    sector.style.left = `calc(50% + ${x}px - 15px)`; // 15 = half sector width
+    sector.style.top = `calc(50% + ${y}px - 15px)`;  // 15 = half sector height
     sector.innerText = num;
     sector.id = `sector-${num}`;
 
@@ -35,7 +36,6 @@ function generateWheel() {
     sectors.push(sector);
   });
 }
-
 function generateBettingTable() {
   const numberBets = document.getElementById('number-bets');
   numbers.forEach(num => {
