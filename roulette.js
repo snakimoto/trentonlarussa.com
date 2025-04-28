@@ -7,12 +7,19 @@ const numbers = Array.from({length: 37}, (_, i) => i);
 
 function generateWheel() {
   const wheel = document.getElementById('wheel');
+  const radius = wheel.offsetWidth / 2 - 40; // Dynamic radius calculation
+
   numbers.forEach((num, i) => {
     const sector = document.createElement('div');
     sector.className = 'wheel-sector';
 
-    // corrected position for perfect centering
-    sector.style.transform = `rotate(${i * (360/37)}deg) translate(125px) rotate(-${i * (360/37)}deg)`;
+    const angle = (i * (360 / 37)) * Math.PI / 180;
+    const x = radius * Math.cos(angle);
+    const y = radius * Math.sin(angle);
+
+    sector.style.position = 'absolute';
+    sector.style.left = `${200 + x - 15}px`;  // Centered (200=half wheel), then offset half of sector size
+    sector.style.top = `${200 + y - 15}px`;
     sector.innerText = num;
     sector.id = `sector-${num}`;
 
