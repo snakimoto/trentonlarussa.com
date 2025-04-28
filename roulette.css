@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -27,27 +28,29 @@ h1 {
   justify-content: space-around;
   align-items: flex-start;
   margin-top: 30px;
+  flex-wrap: wrap;
 }
 
 #wheel {
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
   position: relative;
-  margin: 0 auto;
+  margin: 20px auto;
   border: 8px solid white;
   border-radius: 50%;
   background: #333;
+  overflow: hidden;
 }
 
 .wheel-sector {
   position: absolute;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   background: #222;
   color: white;
   border: 1px solid #fff;
   text-align: center;
-  line-height: 50px;
+  line-height: 60px;
   border-radius: 50%;
 }
 
@@ -93,15 +96,16 @@ h1 {
 }
 
 #betting-table {
-  margin-top: 30px;
+  margin-top: 40px;
   padding: 20px;
 }
 
 #number-bets {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
   gap: 8px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .number-bet {
@@ -113,6 +117,7 @@ h1 {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .number-bet:hover {
@@ -138,4 +143,14 @@ h1 {
 .special-bet:hover {
   background: #aaa;
   color: black;
+}
+
+/* Win Flash Effect */
+@keyframes flash {
+  0%, 100% { background-color: black; }
+  50% { background-color: limegreen; }
+}
+
+.win-flash {
+  animation: flash 0.5s ease;
 }
